@@ -1,4 +1,3 @@
-import { UserService } from './userService'
 import { render } from './render'
 
 export const editUser = () => {
@@ -8,44 +7,78 @@ export const editUser = () => {
 	const emailInput = document.querySelector('#form-email')
 	const childrenInput = document.querySelector('#form-children')
 
+	// Обработчик нажатия на кнопку редактирования
 	tbody.addEventListener('click', event => {
-		if (event.target.closest('.btn-edit')) {
-			const tr = event.target.closest('tr')
+		const editButton = event.target.closest('.btn-edit')
+		if (editButton) {
+			const tr = editButton.closest('tr')
 			const id = tr.dataset.key
+			
+			console.log('Редактирование пользователя с ID:', id) // Для отладки
 
-			userService.editUser(id).then(user => {
-				nameInput.value = user.name
-				emailInput.value = user.email
-				childrenInput.checked = user.children
+			// Получаем данные пользователя для заполнения формы
+			window.userService.getUser(id).then(user => {
+				console.log('Данные пользователя:', user) // Для отладки
+				
+				nameInput.value = user.name || ''
+				emailInput.value = user.email || ''
+				childrenInput.checked = user.children || false
 
-				form.dataset.method = 'edit'
-				userService.getUsers().then(users => {
-					render(users)
-				})
+				// Сохраняем ID пользователя в dataset формы
+				form.dataset.method = id
+				
+				// Меняем текст кнопки
+				const submitButton = form.querySelector('button[type="submit"]')
+				if (submitButton) {
+					submitButton.textContent = 'Сохранить изменения'
+				}
+			}).catch(error => {
+				console.error('Ошибка загрузки пользователя:', error)
+				alert('Не удалось загрузить данные пользователя')
 			})
 		}
 	})
 
+	// Обработчик отправки формы
 	form.addEventListener('submit', e => {
 		e.preventDefault()
 
-		if (form.dataset.method) {
-			const id = form.dataset.method
-			
+		const userId = form.dataset.method
+		
+		if (userId) {
+			// Режим редактирования
 			const user = {
-				name: nameInput.value,
-				email: emailInput.value,
+				name: nameInput.value.trim(),
+				email: emailInput.value.trim(),
 				children: childrenInput.checked,
 				permissions: false,
 			}
 
-			userService.editUser(id, user).then(() => {
-				userService.getUsers().then(users => {
+			console.log('Сохраняем изменения для пользователя', userId, user) // Для отладки
+
+			window.userService.editUser(userId, user)
+				.then(() => {
+					return window.userService.getUsers()
+				})
+				.then(users => {
 					render(users)
 					form.reset()
 					form.removeAttribute('data-method')
+					
+					// Возвращаем текст кнопки
+					const submitButton = form.querySelector('button[type="submit"]')
+					if (submitButton) {
+						submitButton.textContent = 'Добавить'
+					}
 				})
-			})
+				.catch(error => {
+					console.error('Ошибка при сохранении:', error)
+					alert('Не удалось сохранить изменения')
+				})
+		} else {
+			// Режим добавления (если нужно)
+			// Здесь ваш код для добавления нового пользователя
+			// Но скорее всего это уже обрабатывается в addUser.js
 		}
 	})
 }

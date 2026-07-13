@@ -5,6 +5,7 @@ export const filterUsers = () => {
 	const btnIsChildren = document.getElementById('btn-isChildren')
 	const btnIsPermissions = document.getElementById('btn-isPermissions')
 	const btnIsAll = document.getElementById('btn-isAll')
+	const searchInput = document.getElementById('search-input')
 
 	btnIsChildren.addEventListener('click', () => {
 		userService.filterUsers('children').then(users => {
@@ -19,6 +20,10 @@ export const filterUsers = () => {
 	})
 
 	btnIsAll.addEventListener('click', () => {
+		if (searchInput) {
+			searchInput.value = ''
+		}
+		
 		userService.getUsers().then(users => {
 			render(users);
 		})

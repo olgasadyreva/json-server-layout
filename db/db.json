@@ -15,11 +15,18 @@
       "permissions": true
     },
     {
-      "name": "hhhh",
-      "email": "olga.sadyreva@mail.ru",
-      "children": false,
+      "name": "gggg",
+      "email": "olga.sadyreva@gmail.com",
+      "children": true,
       "permissions": false,
       "id": 2
+    },
+    {
+      "name": "gggg",
+      "email": "olga.sadyreva@gmail.com",
+      "children": false,
+      "permissions": false,
+      "id": 3
     }
   ]
 }

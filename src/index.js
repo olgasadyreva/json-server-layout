@@ -1,3 +1,5 @@
+import './css/main.css';
+
 import { render } from "./modules/render";
 import { addUser } from "./modules/addUser";
 import { UserService } from "./modules/userService";
