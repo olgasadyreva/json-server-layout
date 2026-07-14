@@ -1,5 +1,4 @@
 export class UserService {
-	// Универсальный метод для отправки данных
 	sendData = async ({ url, data = {}, method = 'POST' }) => {
 		try {
 			const response = await fetch(url, {
@@ -23,7 +22,6 @@ export class UserService {
 		}
 	}
 
-	// Универсальный метод для получения данных
 	getData = async ({ url, method = 'GET' }) => {
 		try {
 			const response = await fetch(url, {
@@ -46,12 +44,10 @@ export class UserService {
 		}
 	}
 
-	// Получить всех пользователей
 	async getUsers() {
 		return await this.getData({ url: '/api/users' })
 	}
 
-	// Добавить пользователя
 	async addUser(user) {
 		return await this.sendData({
 			url: '/api/users',
@@ -60,7 +56,6 @@ export class UserService {
 		})
 	}
 
-	// Удалить пользователя
 	async removeUser(id) {
 		return await this.sendData({
 			url: `/api/users/${id}`,
@@ -69,7 +64,6 @@ export class UserService {
 		})
 	}
 
-	// Изменить права пользователя
 	async changeUser(id, data) {
 		return await this.sendData({
 			url: `/api/users/${id}`,
@@ -78,14 +72,12 @@ export class UserService {
 		});
 	}
 
-	// Получить одного пользователя
 	async getUser(id) {
 		return await this.getData({
 			url: `/api/users/${id}`,
 		});
 	}
 
-	// Редактировать пользователя
 	async editUser(id, user) {
 		return await this.sendData({
 			url: `/api/users/${id}`,
@@ -94,21 +86,18 @@ export class UserService {
 		});
 	}
 
-	// Фильтровать пользователей
 	async filterUsers(filterOption) {
 		return await this.getData({
 			url: `/api/users?${filterOption}=true`,
 		});
 	}
 
-	// Сортировать пользователей
 	async getSortUsers(sortOption) {
 		return await this.getData({
 			url: `/api/users?_sort=${sortOption.name}&_order=${sortOption.value}`,
 		});
 	}
 
-	// Поиск пользователей
 	async getSearchUsers(str) {
 		return await this.getData({
 			url: `/api/users?name_like=${str}`,

@@ -10,14 +10,11 @@ export const filterUsers = () => {
 	const clearSearch = () => {
 		if (searchInput) {
 			searchInput.value = ''
-			// НЕ триггерим событие input, чтобы избежать лишних запросов
-			// searchInput.dispatchEvent(new Event('input'))
 		}
 	}
 
 	btnIsChildren.addEventListener('click', () => {
 		clearSearch()
-		// Сбрасываем сортировку при фильтрации
 		resetSort()
 		
 		userService.filterUsers('children')

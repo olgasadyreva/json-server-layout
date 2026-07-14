@@ -7,46 +7,39 @@ export const editUser = () => {
 	const emailInput = document.querySelector('#form-email')
 	const childrenInput = document.querySelector('#form-children')
 
-	// Обработчик нажатия на кнопку редактирования
 	tbody.addEventListener('click', event => {
 		const editButton = event.target.closest('.btn-edit')
 		if (editButton) {
 			const tr = editButton.closest('tr')
 			const id = tr.dataset.key
 			
-			console.log('Редактирование пользователя с ID:', id) // Для отладки
+			console.log('Редактирование пользователя с ID:', id)
 
-			// Получаем данные пользователя для заполнения формы
 			userService.getUser(id).then(user => {
-				console.log('Данные пользователя:', user) // Для отладки
+				console.log('Данные пользователя:', user)
 				
 				nameInput.value = user.name || ''
 				emailInput.value = user.email || ''
 				childrenInput.checked = user.children || false
 
-				// Сохраняем ID пользователя в dataset формы
 				form.dataset.method = id
 				
-				// Меняем текст кнопки
 				const submitButton = form.querySelector('button[type="submit"]')
 				if (submitButton) {
 					submitButton.textContent = 'Сохранить изменения'
 				}
 			}).catch(error => {
 				console.error('Ошибка загрузки пользователя:', error)
-				alert('Не удалось загрузить данные пользователя')
 			})
 		}
 	})
 
-	// Обработчик отправки формы
 	form.addEventListener('submit', e => {
 		e.preventDefault()
 
 		const userId = form.dataset.method
 		
 		if (userId) {
-			// Режим редактирования
 			const user = {
 				name: nameInput.value.trim(),
 				email: emailInput.value.trim(),

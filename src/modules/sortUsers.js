@@ -1,29 +1,24 @@
 import { render, showError, hideError } from './render'
 
-// Состояние сортировки (глобальное)
 let currentSort = {
-	field: null,    // 'children' или null
-	order: 'asc'    // 'asc' или 'desc'
+	field: null,
+	order: 'asc'
 }
 
-// Функция для проверки, активна ли сортировка
 export const isSortActive = () => {
 	return currentSort.field !== null
 }
 
-// Функция для получения текущей сортировки
 export const getCurrentSort = () => {
 	return currentSort
 }
 
-// Функция для сброса сортировки
 export const resetSort = () => {
 	currentSort.field = null
 	currentSort.order = 'asc'
 	updateSortIcon()
 }
 
-// Функция для обновления иконки
 const updateSortIcon = () => {
 	const headerSortIsChildren = document.getElementById('sort-is-children')
 	if (!headerSortIsChildren) return
@@ -49,30 +44,22 @@ export const sortUsers = () => {
 
 	headerSortIsChildren.style.cursor = 'pointer'
 
-	// Добавляем иконку
 	if (!headerSortIsChildren.querySelector('.sort-icon')) {
 		headerSortIsChildren.innerHTML += '<span class="sort-icon"> ⬍</span>'
 	}
 
-	// Инициализируем иконку
 	updateSortIcon()
 
 	headerSortIsChildren.addEventListener('click', () => {
-		// Меняем состояние сортировки
 		if (currentSort.field === 'children') {
-			// Если уже сортируем по этому полю - меняем порядок
 			currentSort.order = currentSort.order === 'asc' ? 'desc' : 'asc'
 		} else {
-			// Если сортируем по новому полю - начинаем с asc
 			currentSort.field = 'children'
 			currentSort.order = 'asc'
 		}
 
-		// Очищаем поле поиска (но НЕ триггерим событие input)
 		if (searchInput) {
 			searchInput.value = ''
-			// Убираем dispatchEvent, чтобы не вызывать searchUsers
-			// searchInput.dispatchEvent(new Event('input')) // <-- УБИРАЕМ!
 		}
 
 		const sortOrder = currentSort.order
@@ -95,7 +82,6 @@ export const sortUsers = () => {
 	})
 }
 
-// Функция для применения сортировки к данным (используется в других модулях)
 export const applySortToData = (users) => {
 	if (!currentSort.field || !users || users.length === 0) {
 		return users

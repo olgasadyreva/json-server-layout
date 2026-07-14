@@ -1,21 +1,17 @@
-// Получаем элементы для ошибки
 const errorContainer = document.getElementById('error-container')
 const errorMessage = document.getElementById('error-message')
 
-// Функция для показа ошибки
 export const showError = (message = 'Произошла ошибка, данных нет!') => {
 	if (errorContainer && errorMessage) {
 		errorMessage.textContent = message
 		errorContainer.style.display = 'block'
 	}
-	// Очищаем таблицу
 	const tbody = document.getElementById('table-body')
 	if (tbody) {
 		tbody.innerHTML = ''
 	}
 }
 
-// Функция для скрытия ошибки
 export const hideError = () => {
 	if (errorContainer) {
 		errorContainer.style.display = 'none'
@@ -30,13 +26,11 @@ export const render = users => {
 		return
 	}
 
-	// Если пользователей нет или массив пустой - показываем сообщение
 	if (!users || users.length === 0) {
 		showError('Пользователи не найдены')
 		return
 	}
 
-	// Скрываем ошибку, если есть данные
 	hideError();
 
 	tbody.innerHTML = ''

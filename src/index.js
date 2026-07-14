@@ -12,7 +12,6 @@ import { searchUsers } from "./modules/searchUsers";
 
 window.userService = new UserService()
 
-// Загружаем пользователей при старте с обработкой ошибок
 userService.getUsers()
 	.then(data => {
 		console.log('Загружены пользователи:', data);

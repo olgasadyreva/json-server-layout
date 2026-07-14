@@ -13,7 +13,6 @@ export const searchUsers = () => {
 		if (searchValue.length > 0) {
 			userService.getSearchUsers(searchValue)
 				.then(users => {
-					// Применяем текущую сортировку к результатам поиска
 					const sortedUsers = applySortToData(users)
 					
 					if (sortedUsers && sortedUsers.length > 0) {
@@ -30,7 +29,6 @@ export const searchUsers = () => {
 		} else {
 			userService.getUsers()
 				.then(users => {
-					// Применяем текущую сортировку
 					const sortedUsers = applySortToData(users)
 					hideError()
 					render(sortedUsers)
