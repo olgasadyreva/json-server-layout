@@ -1,19 +1,59 @@
-export const render = (users) => {
+// Получаем элементы для ошибки
+const errorContainer = document.getElementById('error-container')
+const errorMessage = document.getElementById('error-message')
+
+// Функция для показа ошибки
+export const showError = (message = 'Произошла ошибка, данных нет!') => {
+	if (errorContainer && errorMessage) {
+		errorMessage.textContent = message
+		errorContainer.style.display = 'block'
+	}
+	// Очищаем таблицу
+	const tbody = document.getElementById('table-body')
+	if (tbody) {
+		tbody.innerHTML = ''
+	}
+}
+
+// Функция для скрытия ошибки
+export const hideError = () => {
+	if (errorContainer) {
+		errorContainer.style.display = 'none'
+	}
+}
+
+export const render = users => {
 	const tbody = document.getElementById('table-body')
 
-	tbody.innerHTML = '';
+	if (!tbody) {
+		console.error('Элемент table-body не найден!')
+		return
+	}
+
+	// Если пользователей нет или массив пустой - показываем сообщение
+	if (!users || users.length === 0) {
+		showError('Пользователи не найдены')
+		return
+	}
+
+	// Скрываем ошибку, если есть данные
+	hideError();
+
+	tbody.innerHTML = ''
 
 	users.forEach(user => {
-		tbody.insertAdjacentHTML('beforeend', `
+		tbody.insertAdjacentHTML(
+			'beforeend',
+			`
 			<tr data-key="${user.id}">
 				<th scope="row">${user.id}</th>
-				<td>${user.name}</td>
-				<td>${user.email}</td>
-				<td>${user.children ? 'Есть': 'Нет'}</td>
+				<td>${user.name || 'Без имени'}</td>
+				<td>${user.email || 'Без email'}</td>
+				<td>${user.children ? 'Есть' : 'Нет'}</td>
 				<td>
 						<div class="form-check form-switch">
 								<input class="form-check-input" type="checkbox" role="switch"
-										id="form-children" ${user.permissions ? 'checked': ''}>
+										id="form-children" ${user.permissions ? 'checked' : ''}>
 						</div>
 				</td>
 				<td>
@@ -27,6 +67,7 @@ export const render = (users) => {
 						</div>
 				</td>
 		</tr>
-			`)
+			`,
+		)
 	})
 }

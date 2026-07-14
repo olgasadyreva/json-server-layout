@@ -1,5 +1,4 @@
-import { UserService } from "./userService"
-import { render } from "./render"
+import { render, showError, hideError } from './render'
 
 export const changePermissions = () => {
 	const tbody = document.getElementById('table-body')

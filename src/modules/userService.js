@@ -1,67 +1,117 @@
 export class UserService {
-	getUsers() {
-		return fetch('/api/users').then(res => res.json())
+	// Универсальный метод для отправки данных
+	sendData = async ({ url, data = {}, method = 'POST' }) => {
+		try {
+			const response = await fetch(url, {
+				method: method,
+				body: JSON.stringify(data),
+				headers: {
+					'Content-type': 'application/json; charset=UTF-8',
+				},
+			})
+
+			if (!response.ok) {
+				throw new Error(`Ошибка HTTP: ${response.status}`)
+			}
+
+			const result = await response.json()
+			console.log('Данные успешно отправлены:', result)
+			return result
+		} catch (error) {
+			console.error('Ошибка при отправке данных:', error.message)
+			throw error
+		}
 	}
 
-	addUser(user) {
-		return fetch('/api/users', {
+	// Универсальный метод для получения данных
+	getData = async ({ url, method = 'GET' }) => {
+		try {
+			const response = await fetch(url, {
+				method: method,
+				headers: {
+					'Content-type': 'application/json',
+				},
+			})
+
+			if (!response.ok) {
+				throw new Error(`Ошибка HTTP: ${response.status}`)
+			}
+
+			const data = await response.json()
+			console.log('Данные получены из db.json:', data)
+			return data
+		} catch (error) {
+			console.error('Ошибка при получении данных:', error.message)
+			throw error
+		}
+	}
+
+	// Получить всех пользователей
+	async getUsers() {
+		return await this.getData({ url: '/api/users' })
+	}
+
+	// Добавить пользователя
+	async addUser(user) {
+		return await this.sendData({
+			url: '/api/users',
 			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(user),
-		}).then(res => {
-			console.log(res.json())
+			data: user,
 		})
 	}
 
-	removeUser(id) {
-		return fetch(`/api/users/${id}`, {
+	// Удалить пользователя
+	async removeUser(id) {
+		return await this.sendData({
+			url: `/api/users/${id}`,
 			method: 'DELETE',
-		}).then(res => res.json())
+			data: {},
+		})
 	}
 
-	changeUser(id, data) {
-		return fetch(`/api/users/${id}`, {
+	// Изменить права пользователя
+	async changeUser(id, data) {
+		return await this.sendData({
+			url: `/api/users/${id}`,
 			method: 'PATCH',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(data),
-		}).then(res => res.json())
+			data: data,
+		});
 	}
 
-	getUser(id) {
-		return fetch(`/api/users/${id}`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		}).then(res => res.json())
+	// Получить одного пользователя
+	async getUser(id) {
+		return await this.getData({
+			url: `/api/users/${id}`,
+		});
 	}
 
-	editUser(id, user) {
-		return fetch(`/api/users/${id}`, {
+	// Редактировать пользователя
+	async editUser(id, user) {
+		return await this.sendData({
+			url: `/api/users/${id}`,
 			method: 'PUT',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify(user),
-		}).then(res => res.json())
+			data: user,
+		});
 	}
 
-	filterUsers(filterOption) {
-		return fetch(`/api/users?${filterOption}=true`, {
-		}).then(res => res.json())
+	// Фильтровать пользователей
+	async filterUsers(filterOption) {
+		return await this.getData({
+			url: `/api/users?${filterOption}=true`,
+		});
 	}
 
-	getSortUsers(sortOption) {
-		return fetch(`/api/users?_sort=${sortOption.name}&_order=${sortOption.value}`, {
-		}).then(res => res.json())
+	// Сортировать пользователей
+	async getSortUsers(sortOption) {
+		return await this.getData({
+			url: `/api/users?_sort=${sortOption.name}&_order=${sortOption.value}`,
+		});
 	}
 
-	getSearchUsers(str) {
-		return fetch(`/api/users?name_like=${str}`, {
-		}).then(res => res.json())
+	// Поиск пользователей
+	async getSearchUsers(str) {
+		return await this.getData({
+			url: `/api/users?name_like=${str}`,
+		});
 	}
 }

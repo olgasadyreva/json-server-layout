@@ -1,6 +1,6 @@
 import './css/main.css';
 
-import { render } from "./modules/render";
+import { render, showError, hideError } from "./modules/render";
 import { addUser } from "./modules/addUser";
 import { UserService } from "./modules/userService";
 import { removeUser } from "./modules/removeUser";
@@ -10,12 +10,19 @@ import { filterUsers } from "./modules/filterUsers";
 import { sortUsers } from "./modules/sortUsers";
 import { searchUsers } from "./modules/searchUsers";
 
-window.userService = new UserService
+window.userService = new UserService()
 
-userService.getUsers().then(data => {
-	console.log(data);
-	render(data)
-})
+// Загружаем пользователей при старте с обработкой ошибок
+userService.getUsers()
+	.then(data => {
+		console.log('Загружены пользователи:', data);
+		hideError();
+		render(data);
+	})
+	.catch(error => {
+		console.error('Ошибка загрузки пользователей:', error);
+		showError('Произошла ошибка, данных нет!');
+	});
 
 addUser()
 removeUser()

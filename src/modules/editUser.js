@@ -1,4 +1,4 @@
-import { render } from './render'
+import { render, showError, hideError } from './render'
 
 export const editUser = () => {
 	const tbody = document.getElementById('table-body')
@@ -17,7 +17,7 @@ export const editUser = () => {
 			console.log('Редактирование пользователя с ID:', id) // Для отладки
 
 			// Получаем данные пользователя для заполнения формы
-			window.userService.getUser(id).then(user => {
+			userService.getUser(id).then(user => {
 				console.log('Данные пользователя:', user) // Для отладки
 				
 				nameInput.value = user.name || ''
@@ -54,31 +54,25 @@ export const editUser = () => {
 				permissions: false,
 			}
 
-			console.log('Сохраняем изменения для пользователя', userId, user) // Для отладки
-
-			window.userService.editUser(userId, user)
-				.then(() => {
-					return window.userService.getUsers()
-				})
-				.then(users => {
-					render(users)
-					form.reset()
-					form.removeAttribute('data-method')
-					
-					// Возвращаем текст кнопки
-					const submitButton = form.querySelector('button[type="submit"]')
-					if (submitButton) {
-						submitButton.textContent = 'Добавить'
-					}
-				})
-				.catch(error => {
-					console.error('Ошибка при сохранении:', error)
-					alert('Не удалось сохранить изменения')
-				})
-		} else {
-			// Режим добавления (если нужно)
-			// Здесь ваш код для добавления нового пользователя
-			// Но скорее всего это уже обрабатывается в addUser.js
+			userService.editUser(userId, user)
+			.then(() => {
+				return userService.getUsers()
+			})
+			.then(users => {
+				hideError()
+				render(users)
+				form.reset()
+				form.removeAttribute('data-method')
+				
+				const submitButton = form.querySelector('button[type="submit"]')
+				if (submitButton) {
+					submitButton.textContent = 'Добавить'
+				}
+			})
+			.catch(error => {
+				console.error('Ошибка при сохранении:', error)
+				showError('Ошибка при сохранении изменений')
+			});
 		}
-	})
+	});
 }
